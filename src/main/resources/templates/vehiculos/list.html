@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Vehículos - AutoFast</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div class="page-header">
+            <h1>Vehículos</h1>
+            <a href="/vehiculos/nuevo" class="btn btn-primary">Nuevo vehículo</a>
+        </div>
+
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Placa</th>
+                        <th>Marca</th>
+                        <th>Modelo</th>
+                        <th>Año</th>
+                        <th>Cliente</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="vehiculo : ${vehiculos}">
+                        <td th:text="${vehiculo.placa}">ABC-123</td>
+                        <td th:text="${vehiculo.marca}">Toyota</td>
+                        <td th:text="${vehiculo.modelo}">Yaris</td>
+                        <td th:text="${vehiculo.anio}">2020</td>
+                        <td th:text="${vehiculo.cliente.nombreCompleto}">María Torres</td>
+                        <td>
+                            <a th:href="@{/vehiculos/editar/{id}(id=${vehiculo.id})}" class="btn btn-secondary btn-sm">Editar</a>
+                            <a th:href="@{/vehiculos/eliminar/{id}(id=${vehiculo.id})}" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar este vehículo?')">Eliminar</a>
+                        </td>
+                    </tr>
+                    <tr th:if="${vehiculos.isEmpty()}">
+                        <td colspan="6" class="text-center">No hay vehículos registrados</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

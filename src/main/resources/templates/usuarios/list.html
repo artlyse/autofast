@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Usuarios - AutoFast</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div class="page-header">
+            <h1>Gestión de usuarios</h1>
+            <a href="/usuarios/nuevo" class="btn btn-primary">Nuevo usuario</a>
+        </div>
+
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Rol</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="usuario : ${usuarios}">
+                        <td th:text="${usuario.username}">admin</td>
+                        <td th:text="${usuario.nombreCompleto}">Administrador</td>
+                        <td th:text="${usuario.email}">admin@autofast.com</td>
+                        <td>
+                            <!-- Usando th:switch para los roles -->
+                            <span th:switch="${usuario.rol}">
+                                <span th:case="'ADMIN'" class="status-badge status-diagnostic" th:text="${usuario.rol}">ADMIN</span>
+                                <span th:case="'RECEPCIONISTA'" class="status-badge status-pending" th:text="${usuario.rol}">RECEPCIONISTA</span>
+                                <span th:case="'TECNICO'" class="status-badge status-repair" th:text="${usuario.rol}">TECNICO</span>
+                                <span th:case="'ALMACENERO'" class="status-badge status-completed" th:text="${usuario.rol}">ALMACENERO</span>
+                                <span th:case="*" class="status-badge status-pending" th:text="${usuario.rol}">${usuario.rol}</span>
+                            </span>
+                        </td>
+                        <td>
+                            <span th:if="${usuario.activo}" style="color: #2ecc71;">Activo</span>
+                            <span th:unless="${usuario.activo}" style="color: #e74c3c;">Inactivo</span>
+                        </td>
+                        <td>
+                            <a th:href="@{/usuarios/editar/{id}(id=${usuario.id})}" class="btn btn-secondary btn-sm">Editar</a>
+                            <a th:href="@{/usuarios/eliminar/{id}(id=${usuario.id})}" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar este usuario?')">Eliminar</a>
+                        </td>
+                    </tr>
+                    <tr th:if="${usuarios.isEmpty()}">
+                        <td colspan="6" class="text-center">No hay usuarios registrados</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

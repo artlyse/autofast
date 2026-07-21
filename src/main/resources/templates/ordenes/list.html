@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Órdenes - AutoFast</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div class="page-header">
+            <h1>Órdenes de servicio</h1>
+            <a href="/ordenes/nueva" class="btn btn-primary">Nueva orden</a>
+        </div>
+
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>N° orden</th>
+                        <th>Cliente</th>
+                        <th>Vehículo</th>
+                        <th>Total</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="orden : ${ordenes}">
+                        <td th:text="${orden.numeroOrden}">OS-2026-001</td>
+                        <td th:text="${orden.cliente.nombreCompleto}">María Torres</td>
+                        <td th:text="${orden.vehiculo.descripcion}">Toyota Yaris</td>
+                        <td th:text="${'S/ ' + orden.total}">S/ 0.00</td>
+                        <td>
+                            <span th:switch="${orden.estado}">
+                                <span th:case="'Pendiente'" class="status-badge status-pending" th:text="${orden.estado}">Pendiente</span>
+                                <span th:case="'Diagnosticado'" class="status-badge status-diagnostic" th:text="${orden.estado}">Diagnosticado</span>
+                                <span th:case="'En reparación'" class="status-badge status-repair" th:text="${orden.estado}">En reparación</span>
+                                <span th:case="'Finalizado'" class="status-badge status-completed" th:text="${orden.estado}">Finalizado</span>
+                                <span th:case="*" class="status-badge status-pending" th:text="${orden.estado}">${orden.estado}</span>
+                            </span>
+                        </td>
+                        <td>
+                            <a th:href="@{/ordenes/editar/{id}(id=${orden.id})}" class="btn btn-secondary btn-sm">Editar</a>
+                            <a th:href="@{/ordenes/detalle/{id}(id=${orden.id})}" class="btn btn-primary btn-sm">Ver</a>
+                            <a th:href="@{/ordenes/cambiar-estado/{id}?estado=Finalizado(id=${orden.id})}" class="btn btn-success btn-sm" onclick="return confirm('¿Finalizar esta orden?')">Finalizar</a>
+                        </td>
+                    </tr>
+                    <tr th:if="${ordenes.isEmpty()}">
+                        <td colspan="6" class="text-center">No hay órdenes registradas</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

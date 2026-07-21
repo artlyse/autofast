@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Auditoría - AutoFast</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div class="page-header">
+            <h1>Historial de auditoría</h1>
+            <span class="text-muted">Registro de todas las acciones realizadas en el sistema</span>
+        </div>
+
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Usuario</th>
+                        <th>Acción</th>
+                        <th>Entidad</th>
+                        <th>Detalles</th>
+                        <th>IP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="registro : ${registros}">
+                        <td th:text="${#dates.format(registro.fecha, 'dd/MM/yyyy HH:mm:ss')}">20/07/2026 14:30:00</td>
+                        <td th:text="${registro.usuario}">admin</td>
+                        <td>
+                            <!-- Usando th:switch para las acciones -->
+                            <span th:switch="${registro.accion}">
+                                <span th:case="'CREAR'" class="status-badge status-completed" th:text="${registro.accion}">CREAR</span>
+                                <span th:case="'ACTUALIZAR'" class="status-badge status-diagnostic" th:text="${registro.accion}">ACTUALIZAR</span>
+                                <span th:case="'ELIMINAR'" class="status-badge status-repair" th:text="${registro.accion}">ELIMINAR</span>
+                                <span th:case="'CAMBIAR_ESTADO'" class="status-badge status-pending" th:text="${registro.accion}">CAMBIAR_ESTADO</span>
+                                <span th:case="'ACTUALIZAR_STOCK'" class="status-badge status-pending" th:text="${registro.accion}">ACTUALIZAR_STOCK</span>
+                                <span th:case="*" class="status-badge status-pending" th:text="${registro.accion}">${registro.accion}</span>
+                            </span>
+                        </td>
+                        <td th:text="${registro.entidad}">CLIENTE</td>
+                        <td th:text="${registro.detalles}">Cliente: María Torres - 12345678</td>
+                        <td th:text="${registro.ip}">127.0.0.1</td>
+                    </tr>
+                    <tr th:if="${registros.isEmpty()}">
+                        <td colspan="6" class="text-center">No hay registros de auditoría</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

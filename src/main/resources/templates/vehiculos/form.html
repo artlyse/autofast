@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario de vehículo - AutoFast</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div class="page-header">
+            <h1 th:text="${vehiculo.id == null ? 'Nuevo vehículo' : 'Editar vehículo'}">Nuevo vehículo</h1>
+        </div>
+
+        <div class="form-container">
+            <form th:action="@{${vehiculo.id == null ? '/vehiculos/guardar' : '/vehiculos/actualizar/' + vehiculo.id}}" 
+                  th:object="${vehiculo}" method="post">
+                
+                <div class="form-section">
+                    <h3>Datos del vehículo</h3>
+
+                    <div class="form-group">
+                        <label for="cliente.id">Cliente *</label>
+                        <select th:field="*{cliente.id}" id="cliente.id" class="form-control" required>
+                            <option value="">Seleccione un cliente</option>
+                            <option th:each="cliente : ${clientes}" 
+                                    th:value="${cliente.id}" 
+                                    th:text="${cliente.nombreCompleto + ' - ' + cliente.dniRuc}">
+                            </option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="placa">Placa *</label>
+                        <input type="text" th:field="*{placa}" id="placa" class="form-control" required placeholder="ABC-123">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="marca">Marca *</label>
+                        <input type="text" th:field="*{marca}" id="marca" class="form-control" required placeholder="Toyota">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="modelo">Modelo *</label>
+                        <input type="text" th:field="*{modelo}" id="modelo" class="form-control" required placeholder="Yaris">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="anio">Año</label>
+                        <input type="text" th:field="*{anio}" id="anio" class="form-control" placeholder="2020">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="color">Color</label>
+                        <input type="text" th:field="*{color}" id="color" class="form-control" placeholder="Rojo">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="numeroMotor">Número de motor</label>
+                        <input type="text" th:field="*{numeroMotor}" id="numeroMotor" class="form-control" placeholder="Motor-123">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="numeroChasis">Número de chasis</label>
+                        <input type="text" th:field="*{numeroChasis}" id="numeroChasis" class="form-control" placeholder="Chasis-456">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <span class="form-hint">Los campos obligatorios están identificados con *.</span>
+                    <div class="button-group">
+                        <a th:href="@{/vehiculos}" class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso denegado - AutoFast</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .error-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 70vh;
+            text-align: center;
+        }
+        .error-box {
+            background: #fff;
+            padding: 40px 60px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .error-box h1 {
+            font-size: 72px;
+            color: #e74c3c;
+        }
+        .error-box h2 {
+            color: #1a2332;
+            margin: 16px 0;
+        }
+        .error-box p {
+            color: #666;
+            margin-bottom: 24px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 28px;
+            background: #4fc3f7;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+        .btn:hover {
+            background: #29b6f6;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-box">
+            <h1>403</h1>
+            <h2>Acceso denegado</h2>
+            <p>No tienes permisos para acceder a esta sección.</p>
+            <a href="/" class="btn">Volver al inicio</a>
+        </div>
+    </div>
+</body>
+</html>

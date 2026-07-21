@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Reportes - AutoFast</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div class="page-header">
+            <h1>Reportes de gestión</h1>
+        </div>
+
+        <div class="stats-grid" style="margin-bottom: 24px;">
+            <div class="stat-card">
+                <div class="stat-info">
+                    <span class="stat-value" th:text="${totalClientes}">0</span>
+                    <span class="stat-label">Total clientes</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <span class="stat-value" th:text="${totalVehiculos}">0</span>
+                    <span class="stat-label">Total vehículos</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <span class="stat-value" th:text="${totalOrdenes}">0</span>
+                    <span class="stat-label">Total órdenes</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <span class="stat-value" th:text="${totalRepuestos}">0</span>
+                    <span class="stat-label">Total repuestos</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="status-grid" style="margin-bottom: 24px;">
+            <div class="status-card">
+                <span class="status-value" th:text="${ordenesPendientes}">0</span>
+                <span class="status-label">Pendientes</span>
+            </div>
+            <div class="status-card">
+                <span class="status-value" th:text="${ordenesDiagnostico}">0</span>
+                <span class="status-label">En diagnóstico</span>
+            </div>
+            <div class="status-card">
+                <span class="status-value" th:text="${ordenesReparacion}">0</span>
+                <span class="status-label">En reparación</span>
+            </div>
+            <div class="status-card success">
+                <span class="status-value" th:text="${ordenesFinalizadas}">0</span>
+                <span class="status-label">Finalizados</span>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <div class="table-header">
+                <h2>Repuestos con stock bajo</h2>
+            </div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Nombre</th>
+                        <th>Stock actual</th>
+                        <th>Stock mínimo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="repuesto : ${stockBajo}">
+                        <td th:text="${repuesto.codigo}">FIL-001</td>
+                        <td th:text="${repuesto.nombre}">Filtro de Aceite</td>
+                        <td th:text="${repuesto.stockActual}">2</td>
+                        <td th:text="${repuesto.stockMinimo}">5</td>
+                    </tr>
+                    <tr th:if="${stockBajo.isEmpty()}">
+                        <td colspan="4" class="text-center">No hay repuestos con stock bajo</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

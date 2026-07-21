@@ -1,0 +1,38 @@
+# Compiled files
+target/
+*.class
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# Logs
+*.log
+
+# Local configuration
+application-local.properties
+application-dev.properties
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Maven
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+# Database files
+*.db
+*.h2.db
+*.mv.db
+*.trace.db

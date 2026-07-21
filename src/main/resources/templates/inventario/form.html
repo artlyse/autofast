@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario de repuesto - AutoFast</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div class="page-header">
+            <h1 th:text="${repuesto.id == null ? 'Nuevo repuesto' : 'Editar repuesto'}">Nuevo repuesto</h1>
+        </div>
+
+        <div class="form-container">
+            <form th:action="@{${repuesto.id == null ? '/inventario/guardar' : '/inventario/actualizar/' + repuesto.id}}" 
+                  th:object="${repuesto}" method="post">
+                
+                <div class="form-section">
+                    <h3>Datos del repuesto</h3>
+
+                    <div class="form-group">
+                        <label for="codigo">Código *</label>
+                        <input type="text" th:field="*{codigo}" id="codigo" class="form-control" required placeholder="FIL-001">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nombre">Nombre *</label>
+                        <input type="text" th:field="*{nombre}" id="nombre" class="form-control" required placeholder="Filtro de Aceite">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="descripcion">Descripción</label>
+                        <textarea th:field="*{descripcion}" id="descripcion" class="form-control" rows="2" placeholder="Descripción del repuesto"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="marca">Marca</label>
+                        <input type="text" th:field="*{marca}" id="marca" class="form-control" placeholder="Bosch">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="precioCompra">Precio de compra</label>
+                        <input type="number" step="0.01" th:field="*{precioCompra}" id="precioCompra" class="form-control" placeholder="15.00">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="precioVenta">Precio de venta *</label>
+                        <input type="number" step="0.01" th:field="*{precioVenta}" id="precioVenta" class="form-control" required placeholder="25.00">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="stockActual">Stock actual *</label>
+                        <input type="number" th:field="*{stockActual}" id="stockActual" class="form-control" required placeholder="10">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="stockMinimo">Stock mínimo *</label>
+                        <input type="number" th:field="*{stockMinimo}" id="stockMinimo" class="form-control" required placeholder="5">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ubicacion">Ubicación</label>
+                        <input type="text" th:field="*{ubicacion}" id="ubicacion" class="form-control" placeholder="Estante A1">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <span class="form-hint">Los campos obligatorios están identificados con *.</span>
+                    <div class="button-group">
+                        <a th:href="@{/inventario}" class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

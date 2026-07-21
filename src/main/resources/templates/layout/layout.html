@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoFast - Sistema de Gestión</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <span class="logo-text">AUTOFAST</span>
+            </div>
+            <nav class="nav-menu">
+                <!-- Inicio -->
+                <a href="/" class="nav-item" th:class="${activePage == 'dashboard' ? 'nav-item active' : 'nav-item'}">Inicio</a>
+
+                <!-- Clientes: ADMIN y RECEPCIONISTA -->
+                <a sec:authorize="hasAnyRole('ADMIN', 'RECEPCIONISTA')" 
+                   href="/clientes" class="nav-item" th:class="${activePage == 'clientes' ? 'nav-item active' : 'nav-item'}">Clientes</a>
+
+                <!-- Vehículos: ADMIN y RECEPCIONISTA -->
+                <a sec:authorize="hasAnyRole('ADMIN', 'RECEPCIONISTA')" 
+                   href="/vehiculos" class="nav-item" th:class="${activePage == 'vehiculos' ? 'nav-item active' : 'nav-item'}">Vehículos</a>
+
+                <!-- Órdenes: ADMIN, RECEPCIONISTA, TECNICO -->
+                <a sec:authorize="hasAnyRole('ADMIN', 'RECEPCIONISTA', 'TECNICO')" 
+                   href="/ordenes" class="nav-item" th:class="${activePage == 'ordenes' ? 'nav-item active' : 'nav-item'}">Órdenes</a>
+
+                <!-- Inventario: ADMIN y ALMACENERO -->
+                <a sec:authorize="hasAnyRole('ADMIN', 'ALMACENERO')" 
+                   href="/inventario" class="nav-item" th:class="${activePage == 'inventario' ? 'nav-item active' : 'nav-item'}">Inventario</a>
+
+                <!-- Reportes: solo ADMIN -->
+                <a sec:authorize="hasRole('ADMIN')" 
+                   href="/reportes" class="nav-item" th:class="${activePage == 'reportes' ? 'nav-item active' : 'nav-item'}">Reportes</a>
+
+                <!-- USUARIOS: solo ADMIN -->
+                <a sec:authorize="hasRole('ADMIN')" 
+                   href="/usuarios" class="nav-item" th:class="${activePage == 'usuarios' ? 'nav-item active' : 'nav-item'}">Usuarios</a>
+
+                <!-- AUDITORÍA: solo ADMIN -->
+                <a sec:authorize="hasRole('ADMIN')" 
+                   href="/auditoria" class="nav-item" th:class="${activePage == 'auditoria' ? 'nav-item active' : 'nav-item'}">Auditoría</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-actions">
+                    <div class="user-info">
+                        <span class="user-name" sec:authentication="name">Usuario</span>
+                        <span class="user-role" sec:authentication="principal.authorities[0].authority">Rol</span>
+                    </div>
+                    <form th:action="@{/logout}" method="post" style="display:inline;">
+                        <button type="submit" class="btn-logout">Cerrar sesión</button>
+                    </form>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="content">
+                <!-- Mensajes de éxito/error -->
+                <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+                <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+                <div th:replace="${view} ? ~{${view}} : ~{dashboard/index}"></div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Inventario - AutoFast</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div class="page-header">
+            <h1>Inventario de repuestos</h1>
+            <a href="/inventario/nuevo" class="btn btn-primary">Nuevo repuesto</a>
+        </div>
+
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Nombre</th>
+                        <th>Marca</th>
+                        <th>Stock</th>
+                        <th>Mínimo</th>
+                        <th>Precio</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="repuesto : ${repuestos}">
+                        <td th:text="${repuesto.codigo}">FIL-001</td>
+                        <td th:text="${repuesto.nombre}">Filtro de Aceite</td>
+                        <td th:text="${repuesto.marca}">Bosch</td>
+                        <td>
+                            <span th:text="${repuesto.stockActual}"></span>
+                            <span th:if="${repuesto.tieneStockBajo()}" class="status-badge status-pending" style="font-size:10px; margin-left:8px;">Bajo</span>
+                        </td>
+                        <td th:text="${repuesto.stockMinimo}">5</td>
+                        <td th:text="${'S/ ' + repuesto.precioVenta}">S/ 25.00</td>
+                        <td>
+                            <a th:href="@{/inventario/editar/{id}(id=${repuesto.id})}" class="btn btn-secondary btn-sm">Editar</a>
+                            <a th:href="@{/inventario/eliminar/{id}(id=${repuesto.id})}" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar este repuesto?')">Eliminar</a>
+                        </td>
+                    </tr>
+                    <tr th:if="${repuestos.isEmpty()}">
+                        <td colspan="7" class="text-center">No hay repuestos registrados</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

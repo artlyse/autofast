@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - AutoFast</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #f0f2f5;
+        }
+        .login-box {
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        .login-box .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .login-box .logo h1 {
+            font-size: 28px;
+            color: #1a2332;
+        }
+        .login-box .logo h1 span {
+            color: #4fc3f7;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .form-control:focus {
+            border-color: #4fc3f7;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(79, 195, 247, 0.15);
+        }
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: #4fc3f7;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-login:hover {
+            background: #29b6f6;
+        }
+        .error-msg {
+            color: #e74c3c;
+            background: #fde8e8;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .logout-msg {
+            color: #2ecc71;
+            background: #e8f8f0;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <div class="logo">
+                <h1>AUTO<span>FAST</span></h1>
+                <p style="color: #888; margin-top: 5px;">Sistema de Gestión</p>
+            </div>
+
+            <div th:if="${param.error}" class="error-msg">
+                Usuario o contraseña incorrectos
+            </div>
+            <div th:if="${param.logout}" class="logout-msg">
+                Sesión cerrada exitosamente
+            </div>
+
+            <form th:action="@{/login}" method="post">
+                <div class="form-group">
+                    <label for="username">Usuario</label>
+                    <input type="text" id="username" name="username" class="form-control" placeholder="Ingrese su usuario" required autofocus>
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Ingrese su contraseña" required>
+                </div>
+                <button type="submit" class="btn-login">Iniciar sesión</button>
+            </form>
+
+            <div style="margin-top: 20px; text-align: center; font-size: 13px; color: #888;">
+                <p>Usuarios de prueba:</p>
+                <p><strong>admin</strong> / admin123</p>
+                <p><strong>recepcionista</strong> / recepcionista123</p>
+                <p><strong>tecnico</strong> / tecnico123</p>
+                <p><strong>almacenero</strong> / almacenero123</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

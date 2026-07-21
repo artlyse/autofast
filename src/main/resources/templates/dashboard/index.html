@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel de control - AutoFast</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div class="page-header">
+            <h1>Panel de control</h1>
+        </div>
+
+        <!-- Tarjetas de estadísticas (según rol) -->
+        <div class="stats-grid">
+            <!-- Clientes: solo ADMIN y RECEPCIONISTA -->
+            <div sec:authorize="hasAnyRole('ADMIN', 'RECEPCIONISTA')" class="stat-card">
+                <div class="stat-info">
+                    <span class="stat-value" th:text="${totalClientes}">0</span>
+                    <span class="stat-label">Clientes registrados</span>
+                </div>
+            </div>
+
+            <!-- Vehículos: solo ADMIN y RECEPCIONISTA -->
+            <div sec:authorize="hasAnyRole('ADMIN', 'RECEPCIONISTA')" class="stat-card">
+                <div class="stat-info">
+                    <span class="stat-value" th:text="${totalVehiculos}">0</span>
+                    <span class="stat-label">Vehículos atendidos</span>
+                </div>
+            </div>
+
+            <!-- Órdenes: ADMIN, RECEPCIONISTA, TECNICO -->
+            <div sec:authorize="hasAnyRole('ADMIN', 'RECEPCIONISTA', 'TECNICO')" class="stat-card">
+                <div class="stat-info">
+                    <span class="stat-value" th:text="${ordenesAbiertas.size()}">0</span>
+                    <span class="stat-label">Órdenes abiertas</span>
+                </div>
+            </div>
+
+            <!-- Stock bajo: ADMIN y ALMACENERO -->
+            <div sec:authorize="hasAnyRole('ADMIN', 'ALMACENERO')" class="stat-card warning">
+                <div class="stat-info">
+                    <span class="stat-value" th:text="${stockBajo.size()}">0</span>
+                    <span class="stat-label">Stock bajo</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estados de órdenes (solo para quienes ven órdenes) -->
+        <div sec:authorize="hasAnyRole('ADMIN', 'RECEPCIONISTA', 'TECNICO')" class="status-grid">
+            <div class="status-card">
+                <span class="status-value" th:text="${ordenesPendientes}">0</span>
+                <span class="status-label">Pendientes</span>
+            </div>
+            <div class="status-card">
+                <span class="status-value" th:text="${ordenesDiagnostico}">0</span>
+                <span class="status-label">En diagnóstico</span>
+            </div>
+            <div class="status-card">
+                <span class="status-value" th:text="${ordenesReparacion}">0</span>
+                <span class="status-label">En reparación</span>
+            </div>
+            <div class="status-card success">
+                <span class="status-value" th:text="${ordenesFinalizadas}">0</span>
+                <span class="status-label">Finalizados</span>
+            </div>
+        </div>
+
+        <!-- Tabla de órdenes recientes (solo para quienes ven órdenes) -->
+        <div sec:authorize="hasAnyRole('ADMIN', 'RECEPCIONISTA', 'TECNICO')" class="table-container">
+            <div class="table-header">
+                <h2>Órdenes recientes</h2>
+            </div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>N° orden</th>
+                        <th>Cliente</th>
+                        <th>Vehículo</th>
+                        <th>Total</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="orden : ${ordenesAbiertas}">
+                        <td th:text="${orden.numeroOrden}">OS-2026-001</td>
+                        <td th:text="${orden.cliente.nombreCompleto}">María Torres</td>
+                        <td th:text="${orden.vehiculo.descripcion}">Toyota Yaris</td>
+                        <td th:text="${'S/ ' + orden.total}">S/ 0.00</td>
+                        <td>
+                            <span th:switch="${orden.estado}">
+                                <span th:case="'Pendiente'" class="status-badge status-pending" th:text="${orden.estado}">Pendiente</span>
+                                <span th:case="'Diagnosticado'" class="status-badge status-diagnostic" th:text="${orden.estado}">Diagnosticado</span>
+                                <span th:case="'En reparación'" class="status-badge status-repair" th:text="${orden.estado}">En reparación</span>
+                                <span th:case="'Finalizado'" class="status-badge status-completed" th:text="${orden.estado}">Finalizado</span>
+                                <span th:case="*" class="status-badge status-pending" th:text="${orden.estado}">${orden.estado}</span>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr th:if="${ordenesAbiertas.isEmpty()}">
+                        <td colspan="5" class="text-center">No hay órdenes abiertas</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Mensaje para roles sin acceso a ciertos datos -->
+        <div sec:authorize="hasRole('ALMACENERO')" class="table-container" style="margin-top:20px;">
+            <div class="table-header">
+                <h2>Resumen de inventario</h2>
+            </div>
+            <p>Bienvenido, encargado de almacén. Puedes gestionar el inventario desde el menú lateral.</p>
+        </div>
+    </div>
+</body>
+</html>

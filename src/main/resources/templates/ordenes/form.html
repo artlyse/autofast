@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario de orden - AutoFast</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div class="page-header">
+            <h1 th:text="${orden.id == null ? 'Nueva orden de servicio' : 'Editar orden'}">Nueva orden de servicio</h1>
+        </div>
+
+        <div class="form-container">
+            <form th:action="@{${orden.id == null ? '/ordenes/guardar' : '/ordenes/actualizar/' + orden.id}}" 
+                  th:object="${orden}" method="post">
+                
+                <div class="form-section">
+                    <h3>Datos de la orden</h3>
+
+                    <div class="form-group">
+                        <label for="cliente.id">Cliente *</label>
+                        <select th:field="*{cliente.id}" id="cliente.id" class="form-control" required>
+                            <option value="">Seleccione un cliente</option>
+                            <option th:each="cliente : ${clientes}" 
+                                    th:value="${cliente.id}" 
+                                    th:text="${cliente.nombreCompleto + ' - ' + cliente.dniRuc}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="vehiculo.id">Vehículo *</label>
+                        <select th:field="*{vehiculo.id}" id="vehiculo.id" class="form-control" required>
+                            <option value="">Seleccione un vehículo</option>
+                            <option th:each="vehiculo : ${vehiculos}" 
+                                    th:value="${vehiculo.id}" 
+                                    th:text="${vehiculo.descripcion}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tecnico.id">Técnico responsable</label>
+                        <select th:field="*{tecnico.id}" id="tecnico.id" class="form-control">
+                            <option value="">Seleccione un técnico</option>
+                            <option th:each="tecnico : ${tecnicos}" 
+                                    th:value="${tecnico.id}" 
+                                    th:text="${tecnico.nombreCompleto + ' - ' + tecnico.especialidad}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="problemaReportado">Descripción del problema *</label>
+                        <textarea th:field="*{problemaReportado}" id="problemaReportado" 
+                                  class="form-control" rows="4" required
+                                  placeholder="Describa el problema informado por el cliente..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="observaciones">Observaciones</label>
+                        <textarea th:field="*{observaciones}" id="observaciones" 
+                                  class="form-control" rows="3"
+                                  placeholder="Observaciones adicionales..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Fecha de ingreso</label>
+                        <input type="text" class="form-control" 
+                               th:value="${#dates.format(orden.fechaApertura, 'dd/MM/yyyy')}" 
+                               readonly disabled>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <span class="form-hint">Los campos obligatorios están identificados con *.</span>
+                    <div class="button-group">
+                        <a th:href="@{/ordenes}" class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

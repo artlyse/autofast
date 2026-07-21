@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Clientes - AutoFast</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div class="page-header">
+            <h1>Clientes</h1>
+            <a href="/clientes/nuevo" class="btn btn-primary">Nuevo cliente</a>
+        </div>
+
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>DNI/RUC</th>
+                        <th>Nombre</th>
+                        <th>Teléfono</th>
+                        <th>Email</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="cliente : ${clientes}">
+                        <td th:text="${cliente.dniRuc}">12345678</td>
+                        <td th:text="${cliente.nombreCompleto}">María Torres</td>
+                        <td th:text="${cliente.telefono}">987654321</td>
+                        <td th:text="${cliente.email}">maria@email.com</td>
+                        <td>
+                            <a th:href="@{/clientes/editar/{id}(id=${cliente.id})}" class="btn btn-secondary btn-sm">Editar</a>
+                            <a th:href="@{/clientes/eliminar/{id}(id=${cliente.id})}" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar este cliente?')">Eliminar</a>
+                        </td>
+                    </tr>
+                    <tr th:if="${clientes.isEmpty()}">
+                        <td colspan="5" class="text-center">No hay clientes registrados</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
