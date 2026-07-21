@@ -1,27 +1,21 @@
 package pe.edu.utp.autofast.controller;
 
-import java.util.ArrayList;
-
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import jakarta.validation.Valid;
 import pe.edu.utp.autofast.entity.OrdenServicio;
 import pe.edu.utp.autofast.service.ClienteService;
 import pe.edu.utp.autofast.service.OrdenService;
 import pe.edu.utp.autofast.service.TecnicoService;
 import pe.edu.utp.autofast.service.VehiculoService;
+
+import java.util.ArrayList;
 
 @Controller
 @RequestMapping("/ordenes")
@@ -102,7 +96,6 @@ public class OrdenController {
                     model.addAttribute("vehiculos", vehiculoService.findAll());
                     model.addAttribute("tecnicos", tecnicoService.findAll());
                     
-                    // Si es técnico, deshabilitar el combo
                     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
                     String rol = auth.getAuthorities().iterator().next().getAuthority();
                     if ("ROLE_TECNICO".equals(rol)) {
@@ -135,6 +128,33 @@ public class OrdenController {
         }
 
         try {
+            // Obtener la orden existente para preservar campos no editables
+            OrdenServicio ordenExistente = ordenService.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
+
+            // Preservar campos que no se modifican en el formulario
+            orden.setEstado(ordenExistente.getEstado());
+            orden.setNumeroOrden(ordenExistente.getNumeroOrden());
+            orden.setFechaApertura(ordenExistente.getFechaApertura());
+            
+            // Preservar técnico si no viene en el formulario
+            if (orden.getTecnico() == null || orden.getTecnico().getId() == null) {
+                orden.setTecnico(ordenExistente.getTecnico());
+            }
+            // Preservar cliente y vehículo si no vienen
+            if (orden.getCliente() == null || orden.getCliente().getId() == null) {
+                orden.setCliente(ordenExistente.getCliente());
+            }
+            if (orden.getVehiculo() == null || orden.getVehiculo().getId() == null) {
+                orden.setVehiculo(ordenExistente.getVehiculo());
+            }
+
+            // Recalcular totales
+            orden.setManoObra(ordenExistente.getManoObra());
+            orden.setTotalRepuestos(ordenExistente.getTotalRepuestos());
+            orden.calcularTotal();
+
+            // Asignar el ID y actualizar
             orden.setId(id);
             ordenService.update(orden);
             redirectAttributes.addFlashAttribute("success", "Orden actualizada exitosamente");
@@ -145,7 +165,6 @@ public class OrdenController {
         }
     }
 
-    // CAMBIADO A GET para que funcione con el enlace
     @GetMapping("/cambiar-estado/{id}")
     public String cambiarEstado(@PathVariable Long id, 
                                 @RequestParam String estado,
