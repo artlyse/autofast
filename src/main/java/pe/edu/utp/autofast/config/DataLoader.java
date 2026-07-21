@@ -8,7 +8,9 @@ import pe.edu.utp.autofast.entity.Tecnico;
 import pe.edu.utp.autofast.entity.Usuario;
 import pe.edu.utp.autofast.repository.TecnicoRepository;
 import pe.edu.utp.autofast.repository.UsuarioRepository;
+
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -90,7 +92,6 @@ public class DataLoader implements CommandLineRunner {
         System.out.println("✅ Usuario almacenero actualizado/creado.");
 
         // ========== SINCRONIZAR TÉCNICOS ==========
-        // Esto asegura que los usuarios con rol TECNICO tengan su registro en la tabla tecnico
         System.out.println("=== SINCRONIZANDO TÉCNICOS ===");
         sincronizarTecnicos();
 
