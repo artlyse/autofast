@@ -8,8 +8,10 @@
     <div th:fragment="content">
         <div class="page-header">
             <h1>Historial de auditoría</h1>
-            <span class="text-muted">Registro de todas las acciones realizadas en el sistema</span>
+            <span style="color: #888; font-size: 14px;">Registro de todas las acciones realizadas en el sistema</span>
         </div>
+
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
         <div class="table-container">
             <table class="data-table">
@@ -25,10 +27,10 @@
                 </thead>
                 <tbody>
                     <tr th:each="registro : ${registros}">
-                        <td th:text="${#dates.format(registro.fecha, 'dd/MM/yyyy HH:mm:ss')}">20/07/2026 14:30:00</td>
+                        <!-- ✅ CORREGIDO con #temporals -->
+                        <td th:text="${#temporals.format(registro.fecha, 'dd/MM/yyyy HH:mm:ss')}">20/07/2026 14:30:00</td>
                         <td th:text="${registro.usuario}">admin</td>
                         <td>
-                            <!-- Usando th:switch para las acciones -->
                             <span th:switch="${registro.accion}">
                                 <span th:case="'CREAR'" class="status-badge status-completed" th:text="${registro.accion}">CREAR</span>
                                 <span th:case="'ACTUALIZAR'" class="status-badge status-diagnostic" th:text="${registro.accion}">ACTUALIZAR</span>

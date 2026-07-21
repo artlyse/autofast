@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle de orden - AutoFast</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div class="page-header">
+            <h1>Detalle de orden de servicio</h1>
+            <a href="/ordenes" class="btn btn-secondary">Volver</a>
+        </div>
+
+        <div class="form-container">
+            <div class="form-section">
+                <h3>Información general</h3>
+                
+                <div class="form-group">
+                    <label>N° orden</label>
+                    <input type="text" class="form-control" th:value="${orden.numeroOrden}" readonly disabled>
+                </div>
+
+                <div class="form-group">
+                    <label>Cliente</label>
+                    <input type="text" class="form-control" th:value="${orden.cliente.nombreCompleto}" readonly disabled>
+                </div>
+
+                <div class="form-group">
+                    <label>Vehículo</label>
+                    <input type="text" class="form-control" th:value="${orden.vehiculo.descripcion}" readonly disabled>
+                </div>
+
+                <div class="form-group">
+                    <label>Técnico responsable</label>
+                    <input type="text" class="form-control" th:value="${orden.tecnico != null ? orden.tecnico.nombreCompleto : 'Sin asignar'}" readonly disabled>
+                </div>
+
+                <div class="form-group">
+                    <label>Estado</label>
+                    <input type="text" class="form-control" th:value="${orden.estado}" readonly disabled>
+                </div>
+
+                <div class="form-group">
+                    <label>Fecha de ingreso</label>
+                    <!-- ✅ CORREGIDO con #temporals -->
+                    <input type="text" class="form-control" th:value="${#temporals.format(orden.fechaApertura, 'dd/MM/yyyy HH:mm')}" readonly disabled>
+                </div>
+
+                <div class="form-group">
+                    <label>Fecha de cierre</label>
+                    <input type="text" class="form-control" th:value="${orden.fechaCierre != null ? #temporals.format(orden.fechaCierre, 'dd/MM/yyyy HH:mm') : 'No finalizada'}" readonly disabled>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Detalles del servicio</h3>
+
+                <div class="form-group">
+                    <label>Problema reportado</label>
+                    <textarea class="form-control" rows="3" readonly disabled th:text="${orden.problemaReportado}">Problema</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Diagnóstico</label>
+                    <textarea class="form-control" rows="3" readonly disabled th:text="${orden.diagnostico != null ? orden.diagnostico : 'Sin diagnóstico'}">Sin diagnóstico</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Trabajo realizado</label>
+                    <textarea class="form-control" rows="3" readonly disabled th:text="${orden.trabajoRealizado != null ? orden.trabajoRealizado : 'Sin trabajo registrado'}">Sin trabajo registrado</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Observaciones</label>
+                    <textarea class="form-control" rows="2" readonly disabled th:text="${orden.observaciones != null ? orden.observaciones : 'Sin observaciones'}">Sin observaciones</textarea>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Costos</h3>
+
+                <div class="form-group">
+                    <label>Mano de obra</label>
+                    <input type="text" class="form-control" th:value="${'S/ ' + orden.manoObra}" readonly disabled>
+                </div>
+
+                <div class="form-group">
+                    <label>Total repuestos</label>
+                    <input type="text" class="form-control" th:value="${'S/ ' + orden.totalRepuestos}" readonly disabled>
+                </div>
+
+                <div class="form-group">
+                    <label>Total</label>
+                    <input type="text" class="form-control" style="font-weight: bold; font-size: 18px; color: #1a2332;" th:value="${'S/ ' + orden.total}" readonly disabled>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <div class="button-group">
+                    <a th:href="@{/ordenes}" class="btn btn-secondary">Volver</a>
+                    <a th:href="@{/ordenes/editar/{id}(id=${orden.id})}" class="btn btn-primary">Editar</a>
+                    <a th:if="${orden.estado != 'Finalizado'}" 
+                       th:href="@{/ordenes/cambiar-estado/{id}?estado=Finalizado(id=${orden.id})}" 
+                       class="btn btn-success" 
+                       onclick="return confirm('¿Finalizar esta orden?')">Finalizar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

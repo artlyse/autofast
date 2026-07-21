@@ -11,6 +11,9 @@
             <a href="/ordenes/nueva" class="btn btn-primary">Nueva orden</a>
         </div>
 
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
         <div class="table-container">
             <table class="data-table">
                 <thead>
@@ -41,7 +44,10 @@
                         <td>
                             <a th:href="@{/ordenes/editar/{id}(id=${orden.id})}" class="btn btn-secondary btn-sm">Editar</a>
                             <a th:href="@{/ordenes/detalle/{id}(id=${orden.id})}" class="btn btn-primary btn-sm">Ver</a>
-                            <a th:href="@{/ordenes/cambiar-estado/{id}?estado=Finalizado(id=${orden.id})}" class="btn btn-success btn-sm" onclick="return confirm('¿Finalizar esta orden?')">Finalizar</a>
+                            <a th:if="${orden.estado != 'Finalizado'}" 
+                               th:href="@{/ordenes/cambiar-estado/{id}?estado=Finalizado(id=${orden.id})}" 
+                               class="btn btn-success btn-sm" 
+                               onclick="return confirm('¿Finalizar esta orden?')">Finalizar</a>
                         </td>
                     </tr>
                     <tr th:if="${ordenes.isEmpty()}">

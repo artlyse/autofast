@@ -1,5 +1,7 @@
 package pe.edu.utp.autofast.controller;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,7 +41,12 @@ public class OrdenController {
 
     @GetMapping
     public String list(Model model) {
-        model.addAttribute("ordenes", ordenService.findAll());
+        try {
+            model.addAttribute("ordenes", ordenService.findAll());
+        } catch (Exception e) {
+            model.addAttribute("error", "Error al cargar órdenes: " + e.getMessage());
+            model.addAttribute("ordenes", new ArrayList<>());
+        }
         model.addAttribute("view", "ordenes/list");
         model.addAttribute("activePage", "ordenes");
         return "layout/layout";
@@ -47,13 +54,15 @@ public class OrdenController {
 
     @GetMapping("/nueva")
     public String nueva(Model model) {
-        OrdenServicio orden = new OrdenServicio();
-        // Asignar fecha actual por defecto (para que el campo la muestre)
-        // No es necesario, lo haremos en la vista con fallback.
-        model.addAttribute("orden", orden);
-        model.addAttribute("clientes", clienteService.findAll());
-        model.addAttribute("vehiculos", vehiculoService.findAll());
-        model.addAttribute("tecnicos", tecnicoService.findAll()); // <-- CLAVE
+        try {
+            OrdenServicio orden = new OrdenServicio();
+            model.addAttribute("orden", orden);
+            model.addAttribute("clientes", clienteService.findAll());
+            model.addAttribute("vehiculos", vehiculoService.findAll());
+            model.addAttribute("tecnicos", tecnicoService.findAll());
+        } catch (Exception e) {
+            model.addAttribute("error", "Error al cargar el formulario: " + e.getMessage());
+        }
         model.addAttribute("view", "ordenes/form");
         model.addAttribute("activePage", "ordenes");
         return "layout/layout";
@@ -74,10 +83,6 @@ public class OrdenController {
         }
 
         try {
-            // Obtener el usuario autenticado para asignar técnico si no viene
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            String rol = auth.getAuthorities().iterator().next().getAuthority();
-            // Si el técnico es nulo, dejarlo como está (puede ser null)
             ordenService.save(orden);
             redirectAttributes.addFlashAttribute("success", "Orden generada exitosamente. N°: " + orden.getNumeroOrden());
             return "redirect:/ordenes";
@@ -89,21 +94,26 @@ public class OrdenController {
 
     @GetMapping("/editar/{id}")
     public String editar(@PathVariable Long id, Model model) {
-        ordenService.findById(id).ifPresentOrElse(
-            orden -> {
-                model.addAttribute("orden", orden);
-                model.addAttribute("clientes", clienteService.findAll());
-                model.addAttribute("vehiculos", vehiculoService.findAll());
-                model.addAttribute("tecnicos", tecnicoService.findAll()); // <-- CLAVE
-                // Si el rol es TECNICO, deshabilitar el combo
-                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-                String rol = auth.getAuthorities().iterator().next().getAuthority();
-                if ("ROLE_TECNICO".equals(rol)) {
-                    model.addAttribute("tecnicoDeshabilitado", true);
-                }
-            },
-            () -> model.addAttribute("error", "Orden no encontrada")
-        );
+        try {
+            ordenService.findById(id).ifPresentOrElse(
+                orden -> {
+                    model.addAttribute("orden", orden);
+                    model.addAttribute("clientes", clienteService.findAll());
+                    model.addAttribute("vehiculos", vehiculoService.findAll());
+                    model.addAttribute("tecnicos", tecnicoService.findAll());
+                    
+                    // Si es técnico, deshabilitar el combo
+                    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                    String rol = auth.getAuthorities().iterator().next().getAuthority();
+                    if ("ROLE_TECNICO".equals(rol)) {
+                        model.addAttribute("tecnicoDeshabilitado", true);
+                    }
+                },
+                () -> model.addAttribute("error", "Orden no encontrada")
+            );
+        } catch (Exception e) {
+            model.addAttribute("error", "Error al cargar la orden: " + e.getMessage());
+        }
         model.addAttribute("view", "ordenes/form");
         model.addAttribute("activePage", "ordenes");
         return "layout/layout";
@@ -135,7 +145,8 @@ public class OrdenController {
         }
     }
 
-    @PostMapping("/cambiar-estado/{id}")
+    // CAMBIADO A GET para que funcione con el enlace
+    @GetMapping("/cambiar-estado/{id}")
     public String cambiarEstado(@PathVariable Long id, 
                                 @RequestParam String estado,
                                 RedirectAttributes redirectAttributes) {
@@ -150,10 +161,17 @@ public class OrdenController {
 
     @GetMapping("/detalle/{id}")
     public String detalle(@PathVariable Long id, Model model) {
-        ordenService.findById(id).ifPresentOrElse(
-            orden -> model.addAttribute("orden", orden),
-            () -> model.addAttribute("error", "Orden no encontrada")
-        );
+        try {
+            ordenService.findById(id).ifPresentOrElse(
+                orden -> {
+                    model.addAttribute("orden", orden);
+                    model.addAttribute("tecnicos", tecnicoService.findAll());
+                },
+                () -> model.addAttribute("error", "Orden no encontrada")
+            );
+        } catch (Exception e) {
+            model.addAttribute("error", "Error al cargar la orden: " + e.getMessage());
+        }
         model.addAttribute("view", "ordenes/detalle");
         model.addAttribute("activePage", "ordenes");
         return "layout/layout";

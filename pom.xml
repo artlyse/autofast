@@ -35,7 +35,7 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
         
-        <!-- Thymeleaf -->
+        <!-- Thymeleaf (ya incluye #temporals) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -75,18 +75,19 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         
-        <!-- Thymeleaf + Spring Security (¡ESTA FALTABA!) -->
+        <!-- Thymeleaf + Spring Security -->
         <dependency>
             <groupId>org.thymeleaf.extras</groupId>
             <artifactId>thymeleaf-extras-springsecurity6</artifactId>
         </dependency>
 
         <!-- AOP para auditoría -->
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-aop</artifactId>
-</dependency>
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+        
+        <!-- ✅ NO AGREGAR thymeleaf-extras-java8time, YA VIENE INCLUIDO -->
     </dependencies>
     
     <build>
