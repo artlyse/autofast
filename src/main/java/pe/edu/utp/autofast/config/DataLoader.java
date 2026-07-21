@@ -8,6 +8,8 @@ import pe.edu.utp.autofast.entity.Tecnico;
 import pe.edu.utp.autofast.entity.Usuario;
 import pe.edu.utp.autofast.repository.TecnicoRepository;
 import pe.edu.utp.autofast.repository.UsuarioRepository;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class DataLoader implements CommandLineRunner {
