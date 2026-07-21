@@ -1,6 +1,8 @@
 package pe.edu.utp.autofast.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -46,10 +48,12 @@ public class OrdenController {
     @GetMapping("/nueva")
     public String nueva(Model model) {
         OrdenServicio orden = new OrdenServicio();
+        // Asignar fecha actual por defecto (para que el campo la muestre)
+        // No es necesario, lo haremos en la vista con fallback.
         model.addAttribute("orden", orden);
         model.addAttribute("clientes", clienteService.findAll());
         model.addAttribute("vehiculos", vehiculoService.findAll());
-        model.addAttribute("tecnicos", tecnicoService.findAll());
+        model.addAttribute("tecnicos", tecnicoService.findAll()); // <-- CLAVE
         model.addAttribute("view", "ordenes/form");
         model.addAttribute("activePage", "ordenes");
         return "layout/layout";
@@ -70,6 +74,10 @@ public class OrdenController {
         }
 
         try {
+            // Obtener el usuario autenticado para asignar técnico si no viene
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String rol = auth.getAuthorities().iterator().next().getAuthority();
+            // Si el técnico es nulo, dejarlo como está (puede ser null)
             ordenService.save(orden);
             redirectAttributes.addFlashAttribute("success", "Orden generada exitosamente. N°: " + orden.getNumeroOrden());
             return "redirect:/ordenes";
@@ -86,7 +94,13 @@ public class OrdenController {
                 model.addAttribute("orden", orden);
                 model.addAttribute("clientes", clienteService.findAll());
                 model.addAttribute("vehiculos", vehiculoService.findAll());
-                model.addAttribute("tecnicos", tecnicoService.findAll());
+                model.addAttribute("tecnicos", tecnicoService.findAll()); // <-- CLAVE
+                // Si el rol es TECNICO, deshabilitar el combo
+                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                String rol = auth.getAuthorities().iterator().next().getAuthority();
+                if ("ROLE_TECNICO".equals(rol)) {
+                    model.addAttribute("tecnicoDeshabilitado", true);
+                }
             },
             () -> model.addAttribute("error", "Orden no encontrada")
         );

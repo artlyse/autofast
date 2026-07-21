@@ -17,6 +17,7 @@
                 <div class="form-section">
                     <h3>Datos de la orden</h3>
 
+                    <!-- Cliente -->
                     <div class="form-group">
                         <label for="cliente.id">Cliente *</label>
                         <select th:field="*{cliente.id}" id="cliente.id" class="form-control" required>
@@ -28,6 +29,7 @@
                         </select>
                     </div>
 
+                    <!-- Vehículo -->
                     <div class="form-group">
                         <label for="vehiculo.id">Vehículo *</label>
                         <select th:field="*{vehiculo.id}" id="vehiculo.id" class="form-control" required>
@@ -39,17 +41,21 @@
                         </select>
                     </div>
 
+                    <!-- Técnico responsable -->
                     <div class="form-group">
                         <label for="tecnico.id">Técnico responsable</label>
-                        <select th:field="*{tecnico.id}" id="tecnico.id" class="form-control">
+                        <select th:field="*{tecnico.id}" id="tecnico.id" class="form-control"
+                                th:disabled="${tecnicoDeshabilitado}">
                             <option value="">Seleccione un técnico</option>
                             <option th:each="tecnico : ${tecnicos}" 
                                     th:value="${tecnico.id}" 
                                     th:text="${tecnico.nombreCompleto + ' - ' + tecnico.especialidad}">
                             </option>
                         </select>
+                        <span th:if="${tecnicoDeshabilitado}" style="font-size:12px; color:#888;">(No puede cambiar el técnico asignado)</span>
                     </div>
 
+                    <!-- Descripción del problema -->
                     <div class="form-group">
                         <label for="problemaReportado">Descripción del problema *</label>
                         <textarea th:field="*{problemaReportado}" id="problemaReportado" 
@@ -57,6 +63,7 @@
                                   placeholder="Describa el problema informado por el cliente..."></textarea>
                     </div>
 
+                    <!-- Observaciones -->
                     <div class="form-group">
                         <label for="observaciones">Observaciones</label>
                         <textarea th:field="*{observaciones}" id="observaciones" 
@@ -64,10 +71,11 @@
                                   placeholder="Observaciones adicionales..."></textarea>
                     </div>
 
+                    <!-- Fecha de ingreso (solo lectura) -->
                     <div class="form-group">
                         <label>Fecha de ingreso</label>
                         <input type="text" class="form-control" 
-                               th:value="${#dates.format(orden.fechaApertura, 'dd/MM/yyyy')}" 
+                               th:value="${#dates.format(orden.fechaApertura != null ? orden.fechaApertura : #dates.createNow(), 'dd/MM/yyyy')}" 
                                readonly disabled>
                     </div>
                 </div>
