@@ -65,37 +65,6 @@ Patrones aplicados:
 
 ---
 
-## 📁 Estructura del proyecto
-autofast/
-├── src/
-│ ├── main/
-│ │ ├── java/pe/edu/utp/autofast/
-│ │ │ ├── config/ # Configuraciones (Security, DataLoader)
-│ │ │ ├── controller/ # Controladores MVC
-│ │ │ ├── service/ # Lógica de negocio
-│ │ │ ├── repository/ # Repositorios JPA
-│ │ │ ├── entity/ # Entidades JPA
-│ │ │ ├── dto/ # Objetos de transferencia
-│ │ │ └── aspect/ # AOP para auditoría
-│ │ └── resources/
-│ │ ├── templates/ # Vistas Thymeleaf
-│ │ │ ├── layout/ # Plantilla base
-│ │ │ ├── dashboard/ # Panel de control
-│ │ │ ├── clientes/ # CRUD clientes
-│ │ │ ├── vehiculos/ # CRUD vehículos
-│ │ │ ├── ordenes/ # CRUD órdenes + detalle
-│ │ │ ├── inventario/ # CRUD repuestos
-│ │ │ ├── usuarios/ # Gestión de usuarios (admin)
-│ │ │ ├── auditoria/ # Historial de acciones
-│ │ │ └── reportes/ # Estadísticas
-│ │ ├── static/css/ # Estilos CSS
-│ │ └── application.properties # Configuración local
-│ └── resources/
-└── pom.xml # Dependencias Maven
-
-
----
-
 ## 🚀 Instalación y ejecución local
 
 ### Requisitos previos
